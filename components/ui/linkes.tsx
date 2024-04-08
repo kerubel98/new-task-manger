@@ -4,14 +4,15 @@ import { HomeIcon, PlusCircledIcon, EnvelopeOpenIcon, MagnifyingGlassIcon } from
 import Link from "next/link";
 import clsx from "clsx";
 import {usePathname} from 'next/navigation'
+import {CommandDemo} from '@/components/ui/search'
 
 
 
 const linkes = [
-  { name: "Home", href: "/notyet", icone: HomeIcon },
-  { name: "Search", href: "/notyet", icone: MagnifyingGlassIcon },
-  { name: "Add Task", href: "/body", icone: PlusCircledIcon },
-  { name: "Inbox", href: "/task", icone: EnvelopeOpenIcon },
+  { name: "Home", href: "/", icone: HomeIcon},
+  { name: "Search", href: "@/", icone: MagnifyingGlassIcon, onclick:()=>{ return <CommandDemo/>} },
+  { name: "Add Task", href: "/todo", icone: PlusCircledIcon},
+  { name: "Inbox", href: "/mail", icone: EnvelopeOpenIcon,},
 ];
 
 export default function NavigationLink() {
@@ -27,7 +28,8 @@ export default function NavigationLink() {
         {
             'bg-blue-800 text-gray-900 h-[50px]': pathname===link.href
         }
-    )}>
+    )} onClick={()=>{link.onclick}}
+    >
         <Linkicon/>
         <p className="hidden md:block text-gray-800">{link.name}</p>
 

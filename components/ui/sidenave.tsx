@@ -2,6 +2,8 @@ import React from "react";
 import NavigationLink from "./linkes";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BellIcon } from "@radix-ui/react-icons";
+import Link from "next/dist/client/link";
+ 
 
 function Sidenave() {
   return (
