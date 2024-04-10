@@ -1,10 +1,10 @@
 "use client";
 import axios, { AxiosError, CanceledError } from "axios";
 import { error } from "console";
+import { todo } from "node:test";
 import { useEffect, useState } from "react";
 
 interface todo {
-  userId: number;
   id: number;
   title: string;
   complited: Boolean;
@@ -35,16 +35,34 @@ const Todo = () => {
     return () => controller.abort();
   }, []);
   const deletTodos = (todo: todo) => {
-    const listtod = todos
+    const listtod = todos;
     setTodos(todos.filter((tu) => tu.id !== todo.id));
     axios
-      .delete('https://jsonplaceholder.typicode.com/todos/' + todo.id)
+      .delete("https://jsonplaceholder.typicode.com/todos/" + todo.id)
       .catch((err) => {
-        setTodos(listtod)
-        console.log(err.message)});
+        setTodos(listtod);
+        console.log(err.message);
+      });
+  };
+  const addTodos = () => {
+    const orginaltod = [...todos];
+    const newTodo:todo= {id:0, title:"new task", complited:false}
+    setTodos([...todos, newTodo])
+    axios
+      .post("https://jsonplaceholder.typicode.com/todos" , newTodo)
+      .then((req) => setTodos([req.data, ...todos]))
+      .catch((err) => {
+        setTodos([...orginaltod])
+        setError(err.message);
+      });
   };
   return (
-    <div className="self-center justify-self-center flex flex-1 justify-center w-full">
+    <div className="self-center justify-self-center  flex flex-col  justify-center w-full">
+      <button 
+      className="bg-blue-500 rounded-sm px-8 self-start ml-5 mt-10"
+      onClick={addTodos}>
+        Add
+      </button>
       <ul className="mt-3 border-2 px-2 rounded-md w-full m-5 flex flex-col">
         {isLoding && (
           <button
