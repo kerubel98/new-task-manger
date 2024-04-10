@@ -17,9 +17,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex gap-6`}>
+      <body className={`${inter.className} flex items-stretch `}>
         <Sidenave></Sidenave>
-        {children}</body>
+        {children}
+        </body>
     </html>
   );
 }
