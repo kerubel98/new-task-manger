@@ -1,14 +1,12 @@
 "use client";
-import axios, { AxiosError, CanceledError } from "axios";
-import { error } from "console";
-import { todo } from "node:test";
-import { useEffect, useState } from "react";
 
-interface todo {
-  id: number;
-  title: string;
-  complited: Boolean;
-}
+import apiClinet, { AxiosError, CanceledError } from "@/components/ui/services/api-clinet";
+import TodoService from "@/components/ui/services/tods-service";
+import { useEffect, useState } from "react";
+import { todo } from "@/components/ui/services/tods-service";
+
+
+
 
 const Todo = () => {
   const [todos, setTodos] = useState<todo[]>([]);
@@ -16,13 +14,11 @@ const Todo = () => {
   const [isLoding, setLoding] = useState(false);
 
   useEffect(() => {
-    const controller = new AbortController();
+    
     setLoding(true);
-    axios
-      .get<todo[]>("https://jsonplaceholder.typicode.com/todos", {
-        signal: controller.signal,
-      })
-      .then((res) => {
+    
+      const {request, cancel} = TodoService.getAll<todo>();
+      request.then((res) => {
         setTodos(res.data);
         setLoding(false);
       })
@@ -32,24 +28,24 @@ const Todo = () => {
         setLoding(false);
       });
 
-    return () => controller.abort();
+    return () => cancel();
   }, []);
+  
   const deletTodos = (todo: todo) => {
     const listtod = todos;
     setTodos(todos.filter((tu) => tu.id !== todo.id));
-    axios
-      .delete("https://jsonplaceholder.typicode.com/todos/" + todo.id)
+    TodoService.delete<number>(todo.id)
       .catch((err) => {
         setTodos(listtod);
         console.log(err.message);
       });
   };
+
   const addTodos = () => {
     const orginaltod = [...todos];
-    const newTodo:todo= {id:0, title:"new task", complited:false}
+    const newTodo:todo= {id:0, title:" task", complited:false}
     setTodos([...todos, newTodo])
-    axios
-      .post("https://jsonplaceholder.typicode.com/todos" , newTodo)
+    TodoService.create(newTodo)
       .then((req) => setTodos([req.data, ...todos]))
       .catch((err) => {
         setTodos([...orginaltod])
